@@ -78,7 +78,7 @@ impl Downloader {
 
             let track_name = metadata.tracks
                 .get(&file.track_id.to_string())
-                .map(|t| t.iracing_path.clone().unwrap_or_else(|| sanitize_filename(&t.display_name)))
+                .map(|t| sanitize_filename(&t.display_name))
                 .unwrap_or_else(|| format!("track_{}", file.track_id));
 
             let dir_path = PathBuf::from("setups")
