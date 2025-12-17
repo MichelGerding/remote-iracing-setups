@@ -73,12 +73,12 @@ impl Downloader {
         for file in files {
             let car_name = metadata.cars
                 .get(&file.car_id.to_string())
-                .map(|c| sanitize_filename(&c.display_name))
+                .map(|c| c.iracing_path.clone().unwrap_or_else(|| sanitize_filename(&c.display_name)))
                 .unwrap_or_else(|| format!("car_{}", file.car_id));
 
             let track_name = metadata.tracks
                 .get(&file.track_id.to_string())
-                .map(|t| sanitize_filename(&t.display_name))
+                .map(|t| t.iracing_path.clone().unwrap_or_else(|| sanitize_filename(&t.display_name)))
                 .unwrap_or_else(|| format!("track_{}", file.track_id));
 
             let dir_path = PathBuf::from("setups")

@@ -73,7 +73,7 @@ async fn info_page() -> Html<&'static str> {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Apex Racing Setups</title>
+    <title>Michel's Setups</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -150,8 +150,8 @@ async fn info_page() -> Html<&'static str> {
     </style>
 </head>
 <body>
-    <h1>🏎️ Apex Racing Setups</h1>
-    <p>Access your Apex Racing setups directly in iRacing using only File Explorer. No software installation required!</p>
+    <h1>🏎️ Michel's Setups</h1>
+    <p>Access your setups directly in iRacing using only File Explorer. No software installation required!</p>
 
     <h2>📁 Step 1: Map Network Drive</h2>
 
@@ -190,7 +190,7 @@ async fn info_page() -> Html<&'static str> {
     <div class="step">
         <strong>1.8</strong> Enter your credentials when prompted:
         <ul>
-            <li><strong>Username:</strong> <code>apex</code></li>
+            <li><strong>Username:</strong> <code>michel</code></li>
             <li><strong>Password:</strong> <em>(your password)</em></li>
         </ul>
         Check ✅ <strong>Remember my credentials</strong> to stay connected
@@ -224,7 +224,7 @@ async fn info_page() -> Html<&'static str> {
     </div>
 
     <div class="step">
-        <strong>2.4</strong> Find the matching car folder on Z: (e.g., <code>Porsche 718 Cayman GT4 Clubsport MR</code>)
+        <strong>2.4</strong> Find the matching car folder on Z: (it uses the same name as iRacing, e.g., <code>porsche718gt4mr</code>)
     </div>
 
     <div class="step">
@@ -240,7 +240,7 @@ async fn info_page() -> Html<&'static str> {
     </div>
 
     <div class="step">
-        <strong>2.8</strong> <strong>Rename</strong> the shortcut to something simple like <code>apex-setups</code>
+        <strong>2.8</strong> <strong>Rename</strong> the shortcut to something simple like <code>michel-setups</code>
     </div>
 
     <div class="success">
@@ -248,8 +248,8 @@ async fn info_page() -> Html<&'static str> {
         <pre style="background: #f8f9fa; padding: 10px; margin-top: 10px;">
 📁 Documents/iRacing/setups/porsche718gt4mr/
    📁 your-local-setups/
-   📁 apex-setups → (shortcut to Z:\Porsche 718...)
-      📁 Circuit de Spa-Francorchamps/
+   📁 michel-setups → (shortcut to Z:\porsche718gt4mr)
+      📁 spa/
          📄 quali_setup.sto
          📄 race_setup.sto</pre>
     </div>
@@ -261,7 +261,7 @@ async fn info_page() -> Html<&'static str> {
         <ol>
             <li>Open the garage</li>
             <li>Go to setups</li>
-            <li>You'll see the <code>apex-setups</code> folder alongside your own setups</li>
+            <li>You'll see the <code>michel-setups</code> folder alongside your own setups</li>
             <li>Open it to browse by track</li>
             <li>Select any setup to load it</li>
         </ol>
@@ -284,14 +284,18 @@ async fn info_page() -> Html<&'static str> {
         </ol>
     </div>
 
-    <h2>📋 Car Folder Reference</h2>
-    <p>Common car folder names:</p>
-    <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
-        <tr style="background:#f8f9fa;"><th style="border:1px solid #ddd; padding:8px;">iRacing Folder</th><th style="border:1px solid #ddd; padding:8px;">Network Drive Folder (Z:)</th></tr>
-        <tr><td style="border:1px solid #ddd; padding:8px;"><code>porsche718gt4mr</code></td><td style="border:1px solid #ddd; padding:8px;">Porsche 718 Cayman GT4 Clubsport MR</td></tr>
-        <tr><td style="border:1px solid #ddd; padding:8px;"><code>lamborghinievogt3</code></td><td style="border:1px solid #ddd; padding:8px;">Lamborghini Huracán GT3 EVO</td></tr>
-    </table>
-    <p><small>Browse the Z: drive to see all available cars.</small></p>
+    <h2>📋 Folder Structure</h2>
+    <p>Folder names on the network drive now match iRacing exactly:</p>
+    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">
+Z:\
+├── porsche718gt4mr\
+│   ├── spa\
+│   ├── nordschleife\
+│   └── nurburggp\
+├── lamborghinievogt3\
+│   └── ...
+└── ...</pre>
+    <p><small>Browse the Z: drive to see all available cars and tracks.</small></p>
 
     <script>
         function copyToClipboard(elementId) {
@@ -309,7 +313,7 @@ async fn admin_page() -> Html<&'static str> {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Apex Racing Admin</title>
+    <title>Michel's Setups - Admin</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -357,7 +361,7 @@ async fn admin_page() -> Html<&'static str> {
     </style>
 </head>
 <body>
-    <h1>🔧 Apex Racing Admin</h1>
+    <h1>🔧 Michel's Setups - Admin</h1>
 
     <div class="section">
         <h2>JWT Token</h2>

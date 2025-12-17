@@ -38,6 +38,8 @@ pub struct CarInfo {
     pub id: u32,
     #[serde(rename = "displayName")]
     pub display_name: String,
+    #[serde(rename = "iracingPath", default)]
+    pub iracing_path: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -45,6 +47,8 @@ pub struct TrackInfo {
     pub id: u32,
     #[serde(rename = "displayName")]
     pub display_name: String,
+    #[serde(rename = "iracingPath", default)]
+    pub iracing_path: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Clone)]

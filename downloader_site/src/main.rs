@@ -11,14 +11,14 @@ use tokio_cron_scheduler::{Job, JobScheduler};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("=== Apex Racing Data Downloader ===\n");
+    println!("=== Michel's Setup Sync ===\n");
 
     let config = match Config::load_or_create() {
         Ok(cfg) => cfg,
         Err(e) => {
             eprintln!("Configuration Error: {}\n", e);
             eprintln!("To get your refresh token:");
-            eprintln!("1. Log into the Apex Racing application");
+            eprintln!("1. Log into the application");
             eprintln!("2. Capture the network traffic during login");
             eprintln!("3. Look for the refresh-token endpoint response");
             eprintln!("4. Copy the 'refreshToken' value to config.json");

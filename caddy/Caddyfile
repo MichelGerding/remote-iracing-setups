@@ -1,0 +1,17 @@
+{
+    order webdav before file_server
+}
+
+setups.michel-gerding.nl {
+    route /setups* {
+        basic_auth {
+            # Replace this hash!
+            apex $2a$14$jHVoEqPYrsFftA1LX7blXuziFNU82zq5ezKA6vPMIugFUaZkOs8hu
+        }
+        webdav {
+            root /opt/setups
+            prefix /setups
+        }
+    }
+    reverse_proxy apex-stealer:3000
+}
