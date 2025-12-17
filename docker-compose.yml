@@ -1,0 +1,38 @@
+services:
+  apex-stealer:
+    image: ghcr.io/michelgerding/apex-stealer:latest
+    build: .
+    container_name: apex-stealer
+    restart: unless-stopped
+    volumes:
+      - ./config.json:/app/config.json
+      - setups:/app/setups
+    ports:
+      - "3000:3000"
+    networks:
+      - apex-network
+
+  webdav:
+    image: dgraziotin/nginx-webdav-nononsense
+    container_name: apex-webdav
+    restart: unless-stopped
+    environment:
+      - WEBDAV_USERNAME=apex
+      - WEBDAV_PASSWORD=apex
+      - SERVER_NAMES=localhost
+      - TIMEOUTS_S=1200
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - setups:/data:ro
+    ports:
+      - "80:80"
+    networks:
+      - apex-network
+
+volumes:
+  setups:
+
+networks:
+  apex-network:
+    driver: bridge
