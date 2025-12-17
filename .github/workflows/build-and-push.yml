@@ -1,0 +1,48 @@
+name: Build and Push Containers
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_OWNER: ${{ github.repository_owner }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push apex-stealer
+        uses: docker/build-push-action@v5
+        with:
+          context: ./downloader_site
+          push: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_OWNER }}/apex-stealer:latest
+            ghcr.io/${{ env.IMAGE_OWNER }}/apex-stealer:${{ github.sha }}
+
+      - name: Build and push apex-caddy
+        uses: docker/build-push-action@v5
+        with:
+          context: ./caddy
+          push: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_OWNER }}/apex-caddy:latest
+            ghcr.io/${{ env.IMAGE_OWNER }}/apex-caddy:${{ github.sha }}

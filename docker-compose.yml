@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   apex-stealer:
-    build: ./downloader_site
+    image: ghcr.io/michelgerding/apex-stealer:latest
     container_name: apex-stealer
     restart: unless-stopped
     volumes:
@@ -12,7 +10,7 @@ services:
       - apex-network
 
   caddy:
-    build: ./caddy
+    image: ghcr.io/michelgerding/apex-caddy:latest
     container_name: apex-caddy
     restart: unless-stopped
     ports:
@@ -22,17 +20,8 @@ services:
       - ACME_AGREE=true
     volumes:
       - /opt/stacks/caddy_webdav/Caddyfile:/etc/caddy/Caddyfile
-      # Map the data folder
       - /opt/stacks/apex-stealer/setups:/opt/setups:ro
       - caddy_data:/data
       - caddy_config:/config
     networks:
       - apex-network
-
-volumes:
-  caddy_data:
-  caddy_config:
-
-networks:
-  apex-network:
-    driver: bridge
