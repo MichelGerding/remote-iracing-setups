@@ -25,3 +25,12 @@ services:
       - caddy_config:/config
     networks:
       - apex-network
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  apex-network:
+    driver: bridge
