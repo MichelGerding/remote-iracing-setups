@@ -15,11 +15,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        rust: [stable]
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,48 +27,49 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             setup_hub/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('setup_hub/Cargo.lock') }}
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: ${{ matrix.rust }}
+          toolchain: stable
           override: true
           profile: minimal
 
-      - name: Build release (setup-home)
+      - name: Build release (setup_hub)
         run: cargo build --manifest-path setup_hub/Cargo.toml --release
         env:
           CARGO_TERM_COLOR: never
 
       - name: List built artifacts
+        shell: bash
         run: ls -la setup_hub/target/release || true
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v4
         with:
-          name: setup-home-${{ matrix.os }}
+          name: setup-hub-windows
           path: |
-            setup_hub/target/release/setup-home*
+            setup_hub/target/release/*.exe
 
   release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          name: setup-hub-windows
           path: artifacts
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: copilot-update-${{ github.run_number }}
-          name: Copilot Update ${{ github.run_number }}
-          body: "Automated release for changes in run ${{ github.run_number }}"
+          tag_name: setup-hub-${{ github.run_number }}
+          name: Setup Hub ${{ github.run_number }}
+          body: "Automated release for run ${{ github.run_number }}"
           draft: false
           prerelease: false
           files: |
-            artifacts/setup_hub-ubuntu-latest/setup_hub
-            artifacts/setup_hub-windows-latest/setup_hub.exe
+            artifacts/*.exe

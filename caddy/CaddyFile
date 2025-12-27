@@ -12,6 +12,6 @@ setups.michel-gerding.nl {
 
     # Main Site
     handle {
-        reverse_proxy apex-stealer:3000
+        reverse_proxy setup-downloader:3000
     }
 }

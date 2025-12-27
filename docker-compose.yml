@@ -23,14 +23,15 @@ services:
     restart: unless-stopped
     networks:
       - setups-network
-    # Configure via environment variables (no on-disk config file)
     environment:
-      - REFRESH_TOKEN=${REFRESH_TOKEN}
-      - APEX_AUTH_URL=${APEX_AUTH_URL}
-      - APEX_SIMDATA_URL=${APEX_SIMDATA_URL}
-      - APEX_MEMBER_URL=${APEX_MEMBER_URL}
-      - ADMIN_USERNAME=${ADMIN_USERNAME}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - AUTH_URL=https://auth.apexracinguk.com/auth/refresh-token
+      - SIMDATA_URL=https://simdata.apexracinguk.com/get-all-metadata
+      - DATAPACKS_URL=https://member.apexracinguk.com/member/get-datapack-files
+      - MEMBER_URL=https://member.apexracinguk.com/member
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - REFRESH_TOKEN=AMf-vBxLoG71LRqs8960hArb7KXUF0ofLsDgtdCc4G5uwNZxWRWhyOzXMjijIbqKMnYiwBvxZl26xxL7lhkJoiheA7MjkVEuxk-MtYqlWeM9YVH73Kcseo2LvzyHlYYc3WeD7gzbiVFjC5IATIks_6geSJrFJuH765GN4e3scBzUzR-sZ1A43xQvpzJYGrc_KlU_O8oW1NTRwER7IHbAMKVrfWzeRdg_ZNqlRErdLjpE6bMPcLIRefzO4ZMrtFxnQbTu7nWgvagYxWawmRL4CTNeH1DDNa3YV6FDRU1yji2J_eNOjajL7EKDopTUeJGdEwU0A8b63btCq-ABDn-VZPSZSp0VaB6FcZ1PYQB3k0l2NtUVvvzZI_t3la1zE9WllkDPpf1EyuA9nuLN4Ip6cB_abnWRG26PKaG5q-8zl5FeJpXOEvGDVgqfdMf4oIbxxjQowSAMZSz6
+
     volumes:
       - /opt/stacks/setup-downloader/setups:/app/setups
 
