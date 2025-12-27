@@ -1,36 +1,53 @@
+version: "3.9"
+
 services:
-  apex-stealer:
-    image: ghcr.io/michelgerding/apex-stealer:latest
-    container_name: apex-stealer
+  setup-hub:
+    image: drakkan/sftpgo:latest
+    container_name: setup-hub
     restart: unless-stopped
-    volumes:
-      - /opt/stacks/apex-stealer/config.json:/app/config.json
-      - /opt/stacks/apex-stealer/setups:/app/setups
     networks:
-      - apex-network
+      - setups-network
+    environment:
+      - SFTPGO_WEBDAVD__BINDINGS__0__PORT=8090
+      - SFTPGO_WEBDAVD__ENABLED=true
+      - SFTPGO_HTTPD__BIND_PORT=8080
+      - SFTPGO_DATA_PROVIDER__DRIVER=sqlite
+      - SFTPGO_DATA_PROVIDER__NAME=/var/lib/sftpgo/sftpgo.db
+    volumes:
+      - /opt/stacks/setup-hub/data:/var/lib/sftpgo
+      - /opt/stacks/setup-downloader/setups:/srv/setups/apex:ro
+
+  setup-downloader:
+    image: ghcr.io/michelgerding/setup-downloader:latest
+    container_name: setup-downloader
+    restart: unless-stopped
+    networks:
+      - setups-network
+    # Configure via environment variables (no on-disk config file)
+    environment:
+      - REFRESH_TOKEN=${REFRESH_TOKEN}
+      - APEX_AUTH_URL=${APEX_AUTH_URL}
+      - APEX_SIMDATA_URL=${APEX_SIMDATA_URL}
+      - APEX_MEMBER_URL=${APEX_MEMBER_URL}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    volumes:
+      - /opt/stacks/setup-downloader/setups:/app/setups
 
   caddy:
-    image: ghcr.io/michelgerding/apex-caddy:latest
-    container_name: apex-caddy
+    image: caddy:latest
+    container_name: caddy-proxy
     restart: unless-stopped
+    networks:
+      - setups-network
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - ACME_AGREE=true
     volumes:
-      - /opt/stacks/caddy_webdav/Caddyfile:/etc/caddy/Caddyfile
-      - /opt/stacks/apex-stealer/setups:/opt/setups:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - apex-network
-
-
-volumes:
-  caddy_data:
-  caddy_config:
+      - /opt/stacks/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /opt/stacks/caddy/data:/data
+      - /opt/stacks/caddy/config:/config
 
 networks:
-  apex-network:
+  setups-network:
     driver: bridge

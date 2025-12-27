@@ -1,11 +1,12 @@
 use crate::models::*;
 use reqwest::Client;
+use std::env;
 
-pub struct ApexApi {
+pub struct Api {
     client: Client,
 }
 
-impl ApexApi {
+impl Api {
     pub fn new() -> Self {
         Self {
             client: Client::new(),
@@ -19,8 +20,10 @@ impl ApexApi {
 
         println!("Attempting to refresh JWT token...");
 
+        let auth_url = env::var("AUTH_URL").unwrap();
+
         let response = self.client
-            .post("https://auth.apexracinguk.com/auth/refresh-token")
+            .post(&auth_url)
             .header("Content-Type", "application/json")
             .json(&req)
             .send()
@@ -58,8 +61,10 @@ impl ApexApi {
     pub async fn fetch_metadata(&self) -> anyhow::Result<Metadata> {
         println!("Fetching metadata...");
 
+        let simdata_url = env::var("SIMDATA_URL").unwrap();
+
         let response = self.client
-            .get("https://simdata.apexracinguk.com/get-all-metadata")
+            .get(&simdata_url)
             .send()
             .await?;
 
@@ -82,8 +87,10 @@ impl ApexApi {
     pub async fn get_datapack_files(&self, jwt_token: &str) -> anyhow::Result<Vec<DatapackFile>> {
         println!("Fetching datapack files...");
 
+        let datapacks_url = env::var("DATAPACKS_URL").unwrap();
+
         let response = self.client
-            .get("https://member.apexracinguk.com/member/get-datapack-files")
+            .get(&datapacks_url)
             .header("authorization", jwt_token)
             .send()
             .await?;
@@ -106,9 +113,10 @@ impl ApexApi {
     }
 
     pub async fn download_file(&self, jwt_token: &str, datapack_id: &str, session_id: &str, file_name: &str) -> anyhow::Result<Vec<u8>> {
+        let member_base_url = env::var("MEMBER_URL").unwrap();
         let file_url = format!(
-            "https://member.apexracinguk.com/member/download-datapack-file/{}/{}/{}",
-            datapack_id, session_id, file_name
+            "{}/download-datapack-file/{}/{}/{}",
+            member_base_url, datapack_id, session_id, file_name
         );
 
         let response = self.client

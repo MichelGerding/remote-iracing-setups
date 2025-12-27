@@ -1,4 +1,4 @@
-use crate::api::ApexApi;
+use crate::api::Api;
 use crate::config::Config;
 use crate::models::*;
 use std::fs;
@@ -7,7 +7,7 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 pub struct Downloader {
-    api: ApexApi,
+    api: Api,
     config: Arc<RwLock<Config>>,
     metadata: Arc<RwLock<Option<Metadata>>>,
 }
@@ -15,7 +15,7 @@ pub struct Downloader {
 impl Downloader {
     pub fn new(config: Config) -> Self {
         Self {
-            api: ApexApi::new(),
+            api: Api::new(),
             config: Arc::new(RwLock::new(config)),
             metadata: Arc::new(RwLock::new(None)),
         }
@@ -23,10 +23,6 @@ impl Downloader {
 
     pub fn get_config(&self) -> Arc<RwLock<Config>> {
         self.config.clone()
-    }
-
-    pub fn get_metadata(&self) -> Arc<RwLock<Option<Metadata>>> {
-        self.metadata.clone()
     }
 
     pub async fn refresh_jwt(&self) -> anyhow::Result<()> {
@@ -119,7 +115,7 @@ impl Downloader {
     pub async fn update_refresh_token(&self, new_token: String) -> anyhow::Result<()> {
         let mut config = self.config.write().await;
         config.refresh_token = new_token;
-        config.save()?;
+        // No config persistence by design.
         drop(config);
 
         self.refresh_jwt().await

@@ -1,2 +1,6 @@
+# JetBrains IDE / project metadata
+.idea/
 .idea
+
+# Rust build artifacts
 **/target

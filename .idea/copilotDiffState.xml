@@ -3,6 +3,15 @@
   <component name="CopilotDiffPersistence">
     <option name="pendingDiffs">
       <map>
+        <entry key="$PROJECT_DIR$/.gitignore">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/.gitignore" />
+              <option name="originalContent" value="# JetBrains IDE / project metadata&#10;.idea/&#10;.idea&#10;&#10;# Rust build artifacts&#10;**/target" />
+              <option name="updatedContent" value="# JetBrains IDE / project metadata&#10;.idea/&#10;.idea&#10;&#10;# Rust build artifacts&#10;**/target" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/Caddyfile.prod">
           <value>
             <PendingDiffInfo>

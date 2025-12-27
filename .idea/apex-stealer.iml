@@ -3,8 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/downloader_site/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/symlinker/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/downloader_site/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/symlinker/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

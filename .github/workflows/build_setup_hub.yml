@@ -1,0 +1,78 @@
+name: Build setup_hub
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'setup_hub/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'setup_hub/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        rust: [stable]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache cargo registry and target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            setup_hub/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+          profile: minimal
+
+      - name: Build release (setup-home)
+        run: cargo build --manifest-path setup_hub/Cargo.toml --release
+        env:
+          CARGO_TERM_COLOR: never
+
+      - name: List built artifacts
+        run: ls -la setup_hub/target/release || true
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: setup-home-${{ matrix.os }}
+          path: |
+            setup_hub/target/release/setup-home*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: copilot-update-${{ github.run_number }}
+          name: Copilot Update ${{ github.run_number }}
+          body: "Automated release for changes in run ${{ github.run_number }}"
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/setup_hub-ubuntu-latest/setup_hub
+            artifacts/setup_hub-windows-latest/setup_hub.exe

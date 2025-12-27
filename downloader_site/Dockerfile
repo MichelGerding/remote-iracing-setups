@@ -17,12 +17,12 @@ RUN apk add --no-cache ca-certificates
 
 WORKDIR /app
 
-COPY --from=builder /app/target/release/apex-stealer .
+COPY --from=builder /app/target/release/setup-downloader .
 
 # Create setups directory
 RUN mkdir -p /app/setups
 
 EXPOSE 3000
 
-CMD ["./apex-stealer"]
+CMD ["./setup-downloader"]
 

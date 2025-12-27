@@ -11,7 +11,7 @@ use tokio_cron_scheduler::{Job, JobScheduler};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("=== Michel's Setup Sync ===\n");
+    println!("=== Setup Hub ===\n");
 
     let config = match Config::load_or_create() {
         Ok(cfg) => cfg,
@@ -21,7 +21,7 @@ async fn main() -> anyhow::Result<()> {
             eprintln!("1. Log into the application");
             eprintln!("2. Capture the network traffic during login");
             eprintln!("3. Look for the refresh-token endpoint response");
-            eprintln!("4. Copy the 'refreshToken' value to config.json");
+            eprintln!("4. Set the REFRESH_TOKEN environment variable to the 'refreshToken' value");
             return Err(e);
         }
     };
@@ -33,10 +33,10 @@ async fn main() -> anyhow::Result<()> {
     if let Err(e) = downloader.refresh_jwt().await {
         eprintln!("\n❌ Failed to refresh JWT token: {}\n", e);
         eprintln!("Common causes:");
-        eprintln!("1. The refresh token in config.json is invalid or expired");
+        eprintln!("1. The REFRESH_TOKEN value is invalid or expired");
         eprintln!("2. The refresh token format is incorrect");
         eprintln!("3. Network connectivity issues");
-        eprintln!("\nPlease obtain a new refresh token from the application and update config.json");
+        eprintln!("\nPlease obtain a new refresh token and update the REFRESH_TOKEN environment variable");
         return Err(e);
     }
 

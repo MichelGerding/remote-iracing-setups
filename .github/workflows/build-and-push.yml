@@ -29,20 +29,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push apex-stealer
+      - name: Build and push setup-downloader
         uses: docker/build-push-action@v5
         with:
           context: ./downloader_site
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/apex-stealer:latest
-            ghcr.io/${{ env.IMAGE_OWNER }}/apex-stealer:${{ github.sha }}
-
-      - name: Build and push apex-caddy
-        uses: docker/build-push-action@v5
-        with:
-          context: ./caddy
-          push: true
-          tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/apex-caddy:latest
-            ghcr.io/${{ env.IMAGE_OWNER }}/apex-caddy:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/setup-downloader:latest
+            ghcr.io/${{ env.IMAGE_OWNER }}/setup-downloader:${{ github.sha }}
