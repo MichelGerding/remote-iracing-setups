@@ -1,10 +1,14 @@
 name: Build and Push Containers
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
+    paths:
+      - 'downloader_site/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/build-and-push.yml'
 
 permissions:
   contents: read

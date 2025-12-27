@@ -1,14 +1,17 @@
 name: Build setup_hub
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
     paths:
       - 'setup_hub/**'
+      - '.github/workflows/build_setup_hub.yml'
   pull_request:
     branches: [ main ]
     paths:
       - 'setup_hub/**'
+      - '.github/workflows/build_setup_hub.yml'
 
 permissions:
   contents: write
@@ -55,7 +58,7 @@ jobs:
   release:
     needs: build
     runs-on: windows-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
