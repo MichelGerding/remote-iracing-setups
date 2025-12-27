@@ -68,245 +68,110 @@ async fn basic_auth_middleware(
         .unwrap()
 }
 
+// rust
 async fn info_page() -> Html<&'static str> {
     Html(r#"
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Michel's Setups</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 20px;
-            line-height: 1.6;
-            color: #333;
-        }
-        h1 { color: #2c3e50; }
-        h2 { color: #34495e; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        h3 { color: #555; margin-top: 25px; }
-        .step {
-            background: #f8f9fa;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .step img {
-            max-width: 100%;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        code {
-            background: #e9ecef;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Consolas', 'Monaco', monospace;
-        }
-        .url {
-            background: #d4edda;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            word-break: break-all;
-            user-select: all;
-        }
-        .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .info {
-            background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .success {
-            background: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .copy-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        .copy-btn:hover { background: #545b62; }
-        .path-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Setup Hub — Quick Guide</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,sans-serif;max-width:900px;margin:36px auto;padding:18px;color:#222}
+  h1{color:#0b3b5a} h2{color:#1f6f8b;margin-top:22px;border-bottom:1px solid #e6eef4;padding-bottom:8px}
+  .card{background:#fbfdff;border-radius:8px;padding:14px;margin:14px 0;border-left:4px solid #2b7bb9}
+  .muted{color:#555;font-size:0.95rem}
+  code{background:#eef6fb;padding:2px 6px;border-radius:4px;font-family:monospace}
+  .path{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .box{background:#fff;padding:8px;border-radius:6px;border:1px solid #e6eef4;font-family:monospace}
+  .btn{background:#1f6f8b;color:#fff;border:none;padding:6px 10px;border-radius:5px;cursor:pointer}
+  .note{background:#fffbe6;border-left:4px solid #f0ad4e;padding:12px;border-radius:6px}
+  pre{background:#f4f7fb;padding:12px;border-radius:6px;overflow:auto}
+  small{color:#666}
+</style>
 </head>
 <body>
-    <h1>🏎️ Michel's Setups</h1>
-    <p>Access your setups directly in iRacing using only File Explorer. No software installation required!</p>
+  <h1>🏎️ Setup Hub — Quick usage</h1>
+  <p class="muted">Small helper to verify credentials, store them in the Windows Vault, and create a local link (symlink) to the remote WebDAV folder so iRacing can access shared setups.</p>
 
-    <h2>📁 Step 1: Map Network Drive</h2>
+  <h2>What it does</h2>
+  <div class="card">
+    <ul>
+      <li>Starts the Windows WebClient service (best-effort).</li>
+      <li>Optionally saves credentials to the Windows Vault via <code>cmdkey</code>.</li>
+      <li>Verifies credentials against the server at <code>https://setups.michel-gerding.nl</code>.</li>
+      <li>Creates a directory symlink inside the current folder pointing to the matching remote category folder.</li>
+    </ul>
+  </div>
 
-    <div class="step">
-        <strong>1.1</strong> Open <strong>File Explorer</strong> (Windows + E)
-    </div>
+  <h2>How to use</h2>
+  <div class="card">
+    <ol>
+      <li>Open File Explorer and navigate to the iRacing car/category folder you want to link, e.g.:
+        <div class="path"><div class="box" id="local">C:\Users\YOUR_USERNAME\Documents\iRacing\setups\porsche718gt4mr</div>
+        <button class="btn" onclick="copy('local')">Copy</button></div>
+      </li>
+      <li>Place or run the compiled <code>setup_hub.exe</code> from that folder (or run it with that folder as the current working directory).</li>
+      <li>Follow prompts: enter username/password, allow saving credentials if desired, and choose the local link name (default: <code>apex</code>).</li>
+      <li>On success the tool will create the symlink and offer to open it in Explorer.</li>
+    </ol>
+  </div>
 
-    <div class="step">
-        <strong>1.2</strong> Right-click on <strong>This PC</strong> in the left sidebar
-    </div>
+  <h2>Helpfull information</h2>
+  <div class="card">
+    <p class="muted">Remote UNC path used by the tool:</p>
+    <pre>\\setups.michel-gerding.nl@SSL\DavWWWRoot\apex\{category_name}</pre>
+  </div>
 
-    <div class="step">
-        <strong>1.3</strong> Click <strong>Map network drive...</strong>
-    </div>
+  <div class="card">
+    <h3>Credentials Commands:</h3>
+      <p class="muted">
+          Add Credentials
+      </p>
+    <pre>cmdkey /add:{remote UNC path} /user:{username} /pass:{password}</pre>
+      <p class="muted">
+          List Credentials
+      </p>
+    <pre>cmdkey /list</pre>
+  </div>
 
-    <div class="step">
-        <strong>1.4</strong> Choose drive letter <strong>Z:</strong> (or any available letter)
-    </div>
 
-    <div class="step">
-        <strong>1.5</strong> In the Folder field, enter:
-        <div class="path-box">
-            <div class="url" id="webdav-url">https://setups.michelgerding.nl/dav/</div>
-            <button class="copy-btn" onclick="copyToClipboard('webdav-url')">Copy</button>
-        </div>
-    </div>
+  <div class="card">
+    <h3>Linking folders:</h3>
+      <p class="muted">
+          For linking folders symlinks are used. this can be done manually using the mklink command
+      </p>
+  </div>
 
-    <div class="step">
-        <strong>1.6</strong> Check ✅ <strong>Connect using different credentials</strong>
-    </div>
+  <div class="note">
+    <strong>Troubleshooting</strong>
+    <ul>
+      <li>If symlink creation fails: run the tool as Administrator or enable Developer Mode to allow symlinks.</li>
+      <li>If WebDAV access fails: ensure the Windows WebClient service is running (open <code>services.msc</code> → start <strong>WebClient</strong> and set Startup type to <strong>Automatic</strong>).</li>
+      <li>If the remote folder is not found: confirm the folder exists on the server and that the local folder name matches the remote category name.</li>
+      <li>Remote setups are read-only; to edit, save a copy into your local setups folder.</li>
+    </ul>
+  </div>
 
-    <div class="step">
-        <strong>1.7</strong> Click <strong>Finish</strong>
-    </div>
+  <h2>Example layout</h2>
+  <pre>Documents\iRacing\setups\porsche718gt4mr\
+  ├─ your-local-setups\
+  └─ apex → (symlink to \\setups.michel-gerding.nl@SSL\DavWWWRoot\apex\porsche718gt4mr)</pre>
 
-    <div class="step">
-        <strong>1.8</strong> Enter your credentials when prompted:
-        <ul>
-            <li><strong>Username:</strong> <code>michel</code></li>
-            <li><strong>Password:</strong> <em>(your password)</em></li>
-        </ul>
-        Check ✅ <strong>Remember my credentials</strong> to stay connected
-    </div>
-
-    <div class="success">
-        <strong>✅ Done!</strong> You now have a Z: drive with all available setups organized by car and track.
-    </div>
-
-    <h2>📂 Step 2: Create Shortcut in iRacing Folder</h2>
-
-    <div class="info">
-        <strong>Goal:</strong> Create a shortcut to the remote setups inside your iRacing setups folder, so they appear in iRacing's setup picker.
-    </div>
-
-    <div class="step">
-        <strong>2.1</strong> Open your iRacing setups folder. Typically located at:
-        <div class="path-box">
-            <div class="url" id="iracing-path">C:\Users\YOUR_USERNAME\Documents\iRacing\setups</div>
-            <button class="copy-btn" onclick="copyToClipboard('iracing-path')">Copy</button>
-        </div>
-        <small>(Replace YOUR_USERNAME with your Windows username)</small>
-    </div>
-
-    <div class="step">
-        <strong>2.2</strong> Navigate to the car folder you want setups for (e.g., <code>porsche718gt4mr</code>)
-    </div>
-
-    <div class="step">
-        <strong>2.3</strong> Open a second File Explorer window and navigate to your <strong>Z: drive</strong>
-    </div>
-
-    <div class="step">
-        <strong>2.4</strong> Find the matching car folder on Z: (it uses the same name as iRacing, e.g., <code>porsche718gt4mr</code>)
-    </div>
-
-    <div class="step">
-        <strong>2.5</strong> <strong>Right-click</strong> on the car folder on Z: and select <strong>Create shortcut</strong>
-    </div>
-
-    <div class="step">
-        <strong>2.6</strong> <strong>Cut</strong> (Ctrl+X) the shortcut that was created
-    </div>
-
-    <div class="step">
-        <strong>2.7</strong> <strong>Paste</strong> (Ctrl+V) it into your iRacing car folder
-    </div>
-
-    <div class="step">
-        <strong>2.8</strong> <strong>Rename</strong> the shortcut to something simple like <code>michel-setups</code>
-    </div>
-
-    <div class="success">
-        <strong>✅ Done!</strong> Your folder structure now looks like:
-        <pre style="background: #f8f9fa; padding: 10px; margin-top: 10px;">
-📁 Documents/iRacing/setups/porsche718gt4mr/
-   📁 your-local-setups/
-   📁 michel-setups → (shortcut to Z:\porsche718gt4mr)
-      📁 spa/
-         📄 quali_setup.sto
-         📄 race_setup.sto</pre>
-    </div>
-
-    <h2>🎮 Using in iRacing</h2>
-
-    <div class="info">
-        When selecting a setup in iRacing:
-        <ol>
-            <li>Open the garage</li>
-            <li>Go to setups</li>
-            <li>You'll see the <code>michel-setups</code> folder alongside your own setups</li>
-            <li>Open it to browse by track</li>
-            <li>Select any setup to load it</li>
-        </ol>
-    </div>
-
-    <div class="warning">
-        <strong>⚠️ Note:</strong> Remote setups are <strong>read-only</strong>. To modify a setup, first load it, then save it with a new name to your local folder.
-    </div>
-
-    <h2>🔧 Troubleshooting</h2>
-
-    <div class="step">
-        <strong>Can't connect to network drive?</strong>
-        <ol>
-            <li>Press <strong>Windows + R</strong></li>
-            <li>Type <code>services.msc</code> and press Enter</li>
-            <li>Find <strong>WebClient</strong> in the list</li>
-            <li>Right-click → <strong>Start</strong></li>
-            <li>Right-click → <strong>Properties</strong> → Set Startup type to <strong>Automatic</strong></li>
-        </ol>
-    </div>
-
-    <h2>📋 Folder Structure</h2>
-    <p>Folder names on the network drive now match iRacing exactly:</p>
-    <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">
-Z:\
-├── porsche718gt4mr\
-│   ├── spa\
-│   ├── nordschleife\
-│   └── nurburggp\
-├── lamborghinievogt3\
-│   └── ...
-└── ...</pre>
-    <p><small>Browse the Z: drive to see all available cars and tracks.</small></p>
-
-    <script>
-        function copyToClipboard(elementId) {
-            const text = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(text);
-        }
-    </script>
+  <script>
+    function copy(id){
+      const txt = document.getElementById(id).innerText;
+      navigator.clipboard?.writeText(txt);
+      const btn = event?.target;
+      if(btn){ const orig = btn.innerText; btn.innerText = 'Copied'; setTimeout(()=>btn.innerText = orig,800); }
+    }
+  </script>
 </body>
 </html>
     "#)
 }
+
 
 async fn admin_page() -> Html<&'static str> {
     Html(r#"
