@@ -1,21 +1,44 @@
 version: "3.9"
-
 services:
-  setup-hub:
-    image: drakkan/sftpgo:latest
-    container_name: setup-hub
+  copyparty:
+    image: copyparty/ac:latest
+    container_name: copyparty
     restart: unless-stopped
     networks:
       - setups-network
-    environment:
-      - SFTPGO_WEBDAVD__BINDINGS__0__PORT=8090
-      - SFTPGO_WEBDAVD__ENABLED=true
-      - SFTPGO_HTTPD__BIND_PORT=8080
-      - SFTPGO_DATA_PROVIDER__DRIVER=sqlite
-      - SFTPGO_DATA_PROVIDER__NAME=/var/lib/sftpgo/sftpgo.db
+    command:
+      - -p
+      - "8080"
+      - "--rproxy"
+      - "1"
+      - "--xff-src"
+      - "any"
+      - "--xf-proto-fb"
+      - "https"
+      - "--dbd"
+      - "wal"
+      # --- MINIMALIST UI & PERFORMANCE ---
+      - "-s"               # Simple mode (disables media engines)
+      - "-nb"              # REMOVE "Powered by Copyparty" branding
+      - "-nih"             # REMOVE hostname/server info from UI
+      - "-nth"             # REMOVE hostname from browser tab title
+      - "--no-zip"         # REMOVE the "Download as Zip" button
+      - "--ui-norepl"      # REMOVE the message/chat button
+      - "-e2dsa"           # Fast list indexing
+      # -----------------------------------
+      - "-a"
+      - "admin:${COPYPARTY_ADMIN_PASSWORD}"
+      - "-a"
+      - "apex:${COPYPARTY_APEX_PASSWORD}"
+      - "-v"
+      # APEX: hanze hidden
+      - "/srv/setups/mothervault:mothervault:r,apex:c,noidx=.*[Hh][Aa][Nn][Zz][Ee]_.*:c,hist=/config/hist/apex"
     volumes:
-      - /opt/stacks/setup-hub/data:/var/lib/sftpgo
-      - /opt/stacks/setup-downloader/setups:/srv/setups/apex:ro
+      - /opt/stacks/copyparty/config:/config
+      - /opt/stacks/setup-downloader/setups:/srv/setups/mothervault:ro
+    environment:
+      - COPYPARTY_ADMIN_PASSWORD=${COPYPARTY_ADMIN_PASSWORD}
+      - COPYPARTY_APEX_PASSWORD=${COPYPARTY_APEX_PASSWORD}
 
   setup-downloader:
     image: ghcr.io/michelgerding/setup-downloader:latest
@@ -24,14 +47,13 @@ services:
     networks:
       - setups-network
     environment:
-      - AUTH_URL=https://auth.apexracinguk.com/auth/refresh-token
-      - SIMDATA_URL=https://simdata.apexracinguk.com/get-all-metadata
-      - DATAPACKS_URL=https://member.apexracinguk.com/member/get-datapack-files
-      - MEMBER_URL=https://member.apexracinguk.com/member
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=admin
-      - REFRESH_TOKEN=AMf-vBxLoG71LRqs8960hArb7KXUF0ofLsDgtdCc4G5uwNZxWRWhyOzXMjijIbqKMnYiwBvxZl26xxL7lhkJoiheA7MjkVEuxk-MtYqlWeM9YVH73Kcseo2LvzyHlYYc3WeD7gzbiVFjC5IATIks_6geSJrFJuH765GN4e3scBzUzR-sZ1A43xQvpzJYGrc_KlU_O8oW1NTRwER7IHbAMKVrfWzeRdg_ZNqlRErdLjpE6bMPcLIRefzO4ZMrtFxnQbTu7nWgvagYxWawmRL4CTNeH1DDNa3YV6FDRU1yji2J_eNOjajL7EKDopTUeJGdEwU0A8b63btCq-ABDn-VZPSZSp0VaB6FcZ1PYQB3k0l2NtUVvvzZI_t3la1zE9WllkDPpf1EyuA9nuLN4Ip6cB_abnWRG26PKaG5q-8zl5FeJpXOEvGDVgqfdMf4oIbxxjQowSAMZSz6
-
+      - AUTH_URL=${AUTH_URL}
+      - SIMDATA_URL=${SIMDATA_URL}
+      - DATAPACKS_URL=${DATAPACKS_URL}
+      - MEMBER_URL=${MEMBER_URL}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - REFRESH_TOKEN=${REFRESH_TOKEN}
     volumes:
       - /opt/stacks/setup-downloader/setups:/app/setups
 

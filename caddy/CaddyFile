@@ -1,17 +1,13 @@
-# SFTPGo Admin Panel
 admin-setups.michel-gerding.nl {
-    reverse_proxy setup-hub:8080
-}
-
-# Main Site (Web App + WebDAV)
-setups.michel-gerding.nl {
-    # WebDAV
-    handle /apex* {
-        reverse_proxy setup-hub:8090
-    }
-
-    # Main Site
-    handle {
+    handle /admin* {
         reverse_proxy setup-downloader:3000
     }
+
+    handle {
+        reverse_proxy copyparty:8080
+    }
+}
+
+setups.michel-gerding.nl {
+    reverse_proxy copyparty:8080
 }
