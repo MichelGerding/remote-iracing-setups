@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   copyparty:
     image: copyparty/ac:latest
@@ -7,38 +8,11 @@ services:
     networks:
       - setups-network
     command:
-      - -p
-      - "8080"
-      - "--rproxy"
-      - "1"
-      - "--xff-src"
-      - "any"
-      - "--xf-proto-fb"
-      - "https"
-      - "--dbd"
-      - "wal"
-      # --- MINIMALIST UI & PERFORMANCE ---
-      - "-s"               # Simple mode (disables media engines)
-      - "-nb"              # REMOVE "Powered by Copyparty" branding
-      - "-nih"             # REMOVE hostname/server info from UI
-      - "-nth"             # REMOVE hostname from browser tab title
-      - "--no-zip"         # REMOVE the "Download as Zip" button
-      - "--ui-norepl"      # REMOVE the message/chat button
-      - "-e2dsa"           # Fast list indexing
-      # -----------------------------------
-      - "-a"
-      - "admin:${COPYPARTY_ADMIN_PASSWORD}"
-      - "-a"
-      - "apex:${COPYPARTY_APEX_PASSWORD}"
-      - "-v"
-      # APEX: hanze hidden
-      - "/srv/setups/mothervault:mothervault:r,apex:c,noidx=.*[Hh][Aa][Nn][Zz][Ee]_.*:c,hist=/config/hist/apex"
+      - -c
+      - /config/copyparty.conf
     volumes:
       - /opt/stacks/copyparty/config:/config
       - /opt/stacks/setup-downloader/setups:/srv/setups/mothervault:ro
-    environment:
-      - COPYPARTY_ADMIN_PASSWORD=${COPYPARTY_ADMIN_PASSWORD}
-      - COPYPARTY_APEX_PASSWORD=${COPYPARTY_APEX_PASSWORD}
 
   setup-downloader:
     image: ghcr.io/michelgerding/setup-downloader:latest

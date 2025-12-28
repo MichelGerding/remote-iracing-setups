@@ -4,3 +4,7 @@
 
 # Rust build artifacts
 **/target
+
+
+copypart/
+caddy/
