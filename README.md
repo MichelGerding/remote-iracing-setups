@@ -12,48 +12,11 @@ A utility tool for setting up verified connections to the Setup Hub WebDAV servi
 
 ## Setup
 
-### Prerequisites
-- Rust (latest stable)
-- Windows (for setup_hub, due to Windows-specific features)
-
-### Building
-```bash
-# Build all components
-cargo build --release
-
-# Or build individually
-cd downloader_site && cargo build --release
-cd ../setup_hub && cargo build --release
-```
-
 ### Running
+just run it with docker
 
-#### downloader_site
-Set the required environment variables:
-- `REFRESH_TOKEN`: Your refresh token
-- `APEX_AUTH_URL`: Auth endpoint
-- `APEX_SIMDATA_URL`: Simdata endpoint
-- `APEX_MEMBER_URL`: Member endpoint
-- `ADMIN_USERNAME`: Admin username (default: admin)
-- `ADMIN_PASSWORD`: Admin password (default: changeme)
-
-Then run:
-```bash
-cd downloader_site
-cargo run
-```
-
-Access the web interface at http://localhost:3000
-Admin panel at http://localhost:3000/admin
-
-#### setup_hub
-Run the setup tool:
-```bash
-cd setup_hub
-cargo run
-```
-
-This will guide you through setting up WebDAV credentials for setups.michel-gerding.nl.
+### building setup_hub
+build with cargo, if you use rust i bet you can find out how
 
 ## Docker
 
