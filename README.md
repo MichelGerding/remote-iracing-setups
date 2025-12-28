@@ -1,3 +1,12 @@
+## ⚠️ Warning: Not Intended for Public Use
+
+This project is a personal/internal tool and is not designed, tested, or maintained for public consumption. It may contain hardcoded configurations, security vulnerabilities, or dependencies specific to my environment.
+
+**That said:** The code is here, and you're free to do whatever you want with it. Fork it, modify it, break it, learn from it—no judgment. Just understand that there's no guarantee it will work for you, and support/maintenance is not provided.
+
+Use at your own risk. 🤷
+
+
 # Setup Hub
 
 A collection of tools for managing setup data and connections.
